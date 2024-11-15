@@ -16,7 +16,7 @@ def get_images_from_url(url):
     try:
         # Selenium WebDriver configureren met headless Chrome-opties
         options = webdriver.ChromeOptions()
-        options.add_argument('--headless')
+        #options.add_argument('--headless')
         options.add_argument('--disable-gpu')
         options.add_argument('--window-size=1920,1200')
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
