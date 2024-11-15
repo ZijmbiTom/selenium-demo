@@ -6,6 +6,9 @@ from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 import time
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 # ------------- Settings for Pages -----------
 st.set_page_config(layout="wide")
@@ -16,7 +19,6 @@ def get_images_from_url(url):
     try:
         # Selenium WebDriver configureren met headless Chrome-opties
         options = webdriver.ChromeOptions()
-        #options.add_argument('--headless')
         options.add_argument("--headless")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
@@ -27,7 +29,7 @@ def get_images_from_url(url):
 
         # Laad de pagina en haal de HTML op
         driver.get(url)
-        time.sleep(10)  # Wacht totdat de pagina volledig is geladen
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "image")))
         html_doc = driver.page_source
         driver.quit()
 
