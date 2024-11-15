@@ -17,33 +17,24 @@ st.set_page_config(layout="wide")
 def get_images_from_url(url):
     driver = None
     try:
-        # Selenium WebDriver configureren met headless Chrome-opties
         options = webdriver.ChromeOptions()
-        options.add_argument("--headless")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--disable-gpu")
-        options.add_argument("--disable-extensions")
-        options.add_argument("--remote-debugging-port=9222")  # Voegt een debugging-poort toe
+        # options.add_argument("--headless")  # Voor debugging uitgeschakeld
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
-        # Laad de pagina en haal de HTML op
         driver.get(url)
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "image")))
+        # Forceer scrollen om lazy-loaded afbeeldingen te laden
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(5)  # Wacht tot de content is geladen
+
         html_doc = driver.page_source
         driver.quit()
 
-        # Parse de HTML en vind alle afbeeldingen
         soup = BeautifulSoup(html_doc, "html.parser")
-        img_tags = soup.find_all('img', class_='image')  # Zoek alle <img> tags met class 'image'
-        images = []
-
-        # Verzamel de volledige URLs van de afbeeldingen
-        for img_tag in img_tags:
-            img_url = img_tag.get('src')
-            if img_url:
-                full_img_url = urljoin(url, img_url)
-                images.append(full_img_url)
+        img_tags = soup.find_all('img', class_='image')
+        images = [urljoin(url, img_tag.get('src')) for img_tag in img_tags if img_tag.get('src')]
 
         return images
 
