@@ -16,7 +16,7 @@ def get_images_from_url(url):
     try:
         # Selenium WebDriver configureren met headless Chrome-opties
         options = Options()
-        options.add_argument('--headless')
+        #options.add_argument('--headless')
         options.add_argument('--disable-gpu')
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
@@ -24,7 +24,7 @@ def get_images_from_url(url):
 
         # Laad de pagina en haal de HTML op
         driver.get(url)
-        time.sleep(5)  # Wacht totdat de pagina volledig is geladen
+        time.sleep(10)  # Wacht totdat de pagina volledig is geladen
         html_doc = driver.page_source
         driver.quit()
 
